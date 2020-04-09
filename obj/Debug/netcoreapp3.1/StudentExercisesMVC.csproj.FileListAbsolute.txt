@@ -132,3 +132,8 @@ C:\Users\Daniel\source\repos\StudentExerciseMVC\StudentExerciseMVC\obj\Debug\net
 C:\Users\Daniel\source\repos\StudentExerciseMVC\StudentExerciseMVC\obj\Debug\netcoreapp3.1\StudentExercisesMVC.pdb
 C:\Users\Daniel\source\repos\StudentExerciseMVC\StudentExerciseMVC\obj\Debug\netcoreapp3.1\StudentExercisesMVC.genruntimeconfig.cache
 C:\Users\Daniel\source\repos\StudentExerciseMVC\StudentExerciseMVC\obj\Debug\netcoreapp3.1\StudentExercisesMVC.csprojAssemblyReference.cache
+C:\Users\Daniel\source\repos\StudentExerciseMVC\StudentExerciseMVC\obj\Debug\netcoreapp3.1\Razor\Views\Students\Create.cshtml.g.cs
+C:\Users\Daniel\source\repos\StudentExerciseMVC\StudentExerciseMVC\obj\Debug\netcoreapp3.1\Razor\Views\Instructors\Delete.cshtml.g.cs
+C:\Users\Daniel\source\repos\StudentExerciseMVC\StudentExerciseMVC\obj\Debug\netcoreapp3.1\Razor\Views\Instructors\Edit.cshtml.g.cs
+C:\Users\Daniel\source\repos\StudentExerciseMVC\StudentExerciseMVC\obj\Debug\netcoreapp3.1\Razor\Views\Students\Delete.cshtml.g.cs
+C:\Users\Daniel\source\repos\StudentExerciseMVC\StudentExerciseMVC\obj\Debug\netcoreapp3.1\Razor\Views\Students\Edit.cshtml.g.cs
