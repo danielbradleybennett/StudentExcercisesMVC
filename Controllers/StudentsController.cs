@@ -64,7 +64,6 @@ namespace StudentExercisesMVC.Controllers
         // GET: Students/Details/1
         public ActionResult Details(int id)
         {
-
             var student = GetStudentById(id);
             return View(student);
         }
@@ -72,18 +71,18 @@ namespace StudentExercisesMVC.Controllers
         // GET: Students/Create
         public ActionResult Create()
         {
-            var viewModel = new StudentViewModel()
+            var cohortOptions = GetCohortOptions();
+            var viewModel = new StudentEditViewModel()
             {
-                CohortOptions = GetCohortOptions()
+                CohortOptions = cohortOptions
             };
             return View(viewModel);
         }
 
-
         // POST: Students/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(StudentViewModel student)
+        public ActionResult Create(StudentEditViewModel student)
         {
             try
             {
@@ -120,14 +119,15 @@ namespace StudentExercisesMVC.Controllers
         public ActionResult Edit(int id)
         {
             var student = GetStudentById(id);
-            var viewModel = new StudentViewModel()
+            var cohortOptions = GetCohortOptions();
+            StudentEditViewModel viewModel = new StudentEditViewModel()
             {
                 StudentId = student.Id,
                 FirstName = student.FirstName,
                 LastName = student.LastName,
-                SlackHandle = student.SlackHandle,
                 CohortId = student.CohortId,
-                CohortOptions = GetCohortOptions()
+                SlackHandle = student.SlackHandle,
+                CohortOptions = cohortOptions
             };
             return View(viewModel);
         }
@@ -135,7 +135,7 @@ namespace StudentExercisesMVC.Controllers
         // POST: Students/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, StudentViewModel student)
+        public ActionResult Edit(int id, [FromForm] StudentEditViewModel student)
         {
             try
             {
@@ -145,19 +145,20 @@ namespace StudentExercisesMVC.Controllers
                     using (SqlCommand cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = @"UPDATE Student 
-                                            SET FirstName = @FirstName,
-                                                LastName = @LastName,
-                                                SlackHandle = @SlackHandle,
-                                                CohortId = @CohortId
-                                                WHERE Id = @id";
+                                            SET FirstName = @firstName, 
+                                                LastName = @lastName, 
+                                                SlackHandle = @slackHandle, 
+                                                CohortId = @cohortId
+                                            WHERE Id = @id";
 
                         cmd.Parameters.Add(new SqlParameter("@firstName", student.FirstName));
                         cmd.Parameters.Add(new SqlParameter("@lastName", student.LastName));
                         cmd.Parameters.Add(new SqlParameter("@slackHandle", student.SlackHandle));
-                        cmd.Parameters.Add(new SqlParameter("@CohortId", student.CohortId));
+                        cmd.Parameters.Add(new SqlParameter("@cohortId", student.CohortId));
                         cmd.Parameters.Add(new SqlParameter("@id", id));
 
                         var rowsAffected = cmd.ExecuteNonQuery();
+
                         if (rowsAffected < 1)
                         {
                             return NotFound();
@@ -166,7 +167,6 @@ namespace StudentExercisesMVC.Controllers
                 }
 
                 return RedirectToAction(nameof(Index));
-
             }
             catch
             {
@@ -184,7 +184,7 @@ namespace StudentExercisesMVC.Controllers
         // POST: Students/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Student student)
+        public ActionResult DeleteStudent([FromRoute] int id)
         {
             try
             {
@@ -193,18 +193,47 @@ namespace StudentExercisesMVC.Controllers
                     conn.Open();
                     using (SqlCommand cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = @"DELETE FROM Student WHERE Id = @id";
+                        cmd.CommandText = "DELETE FROM Student WHERE Id = @id";
+                        cmd.Parameters.Add(new SqlParameter("@id", id));
 
-                        cmd.Parameters.Add(new SqlParameter("@id", student.Id));
                         cmd.ExecuteNonQuery();
-
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
+            }
+        }
+
+        private List<SelectListItem> GetCohortOptions()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT Id, Name FROM Cohort";
+
+                    var reader = cmd.ExecuteReader();
+                    var options = new List<SelectListItem>();
+
+                    while (reader.Read())
+                    {
+                        var option = new SelectListItem()
+                        {
+                            Text = reader.GetString(reader.GetOrdinal("Name")),
+                            Value = reader.GetInt32(reader.GetOrdinal("Id")).ToString()
+                        };
+
+                        options.Add(option);
+
+                    }
+                    reader.Close();
+                    return options;
+                }
             }
         }
 
@@ -236,35 +265,6 @@ namespace StudentExercisesMVC.Controllers
                     }
                     reader.Close();
                     return student;
-
-                }
-            }
-        }
-
-        private List<SelectListItem> GetCohortOptions()
-        {
-            using (SqlConnection conn = Connection)
-            {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = "SELECT Id, Name FROM Cohort";
-
-                    var reader = cmd.ExecuteReader();
-                    var options = new List<SelectListItem>();
-
-                    while (reader.Read())
-                    {
-                        var option = new SelectListItem()
-                        {
-                            Text = reader.GetString(reader.GetOrdinal("Name")),
-                            Value = reader.GetInt32(reader.GetOrdinal("Id")).ToString()
-                        };
-                        options.Add(option);
-                    }
-                    reader.Close();
-                    return options;
-
                 }
             }
         }
