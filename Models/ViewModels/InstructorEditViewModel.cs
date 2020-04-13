@@ -8,31 +8,31 @@ using System.Threading.Tasks;
 
 namespace StudentExercisesMVC.Models.ViewModels
 {
-    public class StudentEditViewModel
+    public class InstructorEditViewModel
     {
-        public int StudentId { get; set; }
-
+        public int InstructorId { get; set; }
         [Display(Name = "First Name")]
-        [Required]
-        [MinLength(2)]
+        [Required(ErrorMessage = "First Name is Required")]
+        [MinLength(2, ErrorMessage = "First Name should be at least 2 characters")]
         public string FirstName { get; set; }
-
         [Display(Name = "Last Name")]
         [Required(ErrorMessage = "Last Name is Required")]
-        [MinLength(3, ErrorMessage = "Last Name should be at least 3 characters")]
+        [MinLength(2, ErrorMessage = "Last Name should be at least 2 characters")]
         public string LastName { get; set; }
+        [Display(Name = "Slack Handle")]
+        [Required]
+        public string SlackHandle { get; set; }
+
+        [Display(Name = "Specialty")]
+        [Required(ErrorMessage = "Specialty is Required")]
+        [MinLength(2, ErrorMessage = "Specialty should be at least 2 characters")]
+        public string Specialty { get; set; }
 
         [Display(Name = "Cohort")]
         [Required]
         public int CohortId { get; set; }
-
-        [Display(Name = "Specialty")]
-        [Required]
-        public string Specialty { get; set; }
-
-        [Display(Name = "Slack Handle")]
-        [Required]
-        public string SlackHandle { get; set; }
         public List<SelectListItem> CohortOptions { get; set; }
+
+
     }
 }

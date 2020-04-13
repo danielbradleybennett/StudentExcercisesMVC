@@ -120,7 +120,7 @@ namespace StudentExercisesMVC.Controllers
         {
             var student = GetStudentById(id);
             var cohortOptions = GetCohortOptions();
-            StudentEditViewModel viewModel = new StudentEditViewModel()
+            var viewModel = new StudentEditViewModel()
             {
                 StudentId = student.Id,
                 FirstName = student.FirstName,
@@ -184,7 +184,7 @@ namespace StudentExercisesMVC.Controllers
         // POST: Students/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteStudent([FromRoute] int id)
+        public ActionResult Delete(int id, Student student)
         {
             try
             {
